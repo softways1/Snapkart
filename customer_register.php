@@ -3,11 +3,22 @@ session_start();
 include('db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
+    $name     = htmlspecialchars(trim($_POST['name']));
+    $email    = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
-    $address = $_POST['address'];
-    $pincode = $_POST['pincode'];
+    $phone    = htmlspecialchars(trim($_POST['phone']));
+    $address  = htmlspecialchars(trim($_POST['address']));
+    $pincode  = htmlspecialchars(trim($_POST['pincode']));
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Invalid email format.');window.location='customer_register.php';</script>";
+        exit;
+    }
+
+    if (strlen($password) < 8) {
+        echo "<script>alert('Password must be at least 8 characters long.');window.location='customer_register.php';</script>";
+        exit;
+    }
 
     $check = mysqli_query($conn, "SELECT * FROM customers WHERE email='$email'");
     if (mysqli_num_rows($check) > 0) {
@@ -16,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $otp = rand(100000, 999999);
-
     $_SESSION['otp'] = $otp;
     $_SESSION['temp_customer'] = [
         'name' => $name,
         'email' => $email,
         'password' => $password,
+        'phone' => $phone,
         'address' => $address,
         'pincode' => $pincode
     ];
@@ -45,6 +56,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <title>Register - SnapKart</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
 
@@ -57,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="flex justify-center items-start pt-14 bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200 min-h-screen">
         <div class="flex flex-col h-auto w-[14cm] p-6 bg-gradient-to-r from-orange-300 via-pink-300 to-blue-300 rounded-2xl shadow-2xl border border-gray-300">
             
-            <form method="POST" class="space-y-3">
+            <form method="POST" onsubmit="return validateForm();" class="space-y-3">
 
                 <div>
                     <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
@@ -77,9 +98,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div>
                     <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
+                        Phone Number:
+                    </label>
+                    <input type="text" name="phone" required placeholder="Enter your phone number"
+                        class="w-full border border-gray-400 rounded p-2 text-black placeholder-gray-500" />
+                </div>
+
+                <div>
+                    <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
                         Password:
                     </label>
-                    <input type="password" name="password" required placeholder="Enter password"
+                    <input type="password" id="password" name="password" required placeholder="At least 8 characters"
                         class="w-full border border-gray-400 rounded p-2 text-black placeholder-gray-500" />
                 </div>
 

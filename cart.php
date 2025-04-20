@@ -39,33 +39,62 @@ if (!empty($cart)) {
     <div class="space-y-4 max-w-4xl mx-auto">
       <?php foreach ($products as $product) { ?>
         <div class="bg-gradient-to-r from-pink-100 via-purple-100 to-pink-200 rounded-2xl shadow-md p-4 w-full max-w-md mx-auto">
-  <div class="flex gap-4 items-center">
-    <img src="product_images/<?php echo $product['image_path']; ?>" class="w-16 h-16 rounded-lg shadow">
-    <div class="text-sm">
-      <div class="text-blue-800 font-semibold text-base"><?php echo $product['name']; ?></div>
-      <div class="text-gray-600">Qty: <?php echo $product['cart_quantity']; ?></div>
-      <div class="text-gray-600">₹<?php echo number_format($product['price'], 2); ?> × <?php echo $product['cart_quantity']; ?> = 
-        <span class="font-semibold text-black">₹<?php echo $product['subtotal']; ?></span>
-      </div>
-    </div>
-  </div>
-</div>
-
+          <div class="flex gap-4 items-center">
+            <img src="product_images/<?php echo $product['image_path']; ?>" class="w-16 h-16 rounded-lg shadow">
+            <div class="text-sm">
+              <div class="text-blue-800 font-semibold text-base"><?php echo $product['name']; ?></div>
+              <div class="text-gray-600">Qty: <?php echo $product['cart_quantity']; ?></div>
+              <div class="text-gray-600">₹<?php echo number_format($product['price'], 2); ?> × <?php echo $product['cart_quantity']; ?> = 
+                <span class="font-semibold text-black">₹<?php echo $product['subtotal']; ?></span>
+              </div>
+            </div>
+          </div>
         </div>
       <?php } ?>
 
-<div class="text-right text-lg font-bold text-purple-900 mt-4">Total: ₹<?php echo $total_price; ?></div>
+      <div class="text-right text-lg font-bold text-purple-900 mt-4">Total: ₹<?php echo $total_price; ?></div>
 
-<form method="post" action="place_order.php" class="text-center mt-4">
-  <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-full shadow hover:opacity-90">
-    Place Order & Pay Now
-  </button>
-</form>
+      <div class="text-center mt-4">
+        <button id="payButton" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-full shadow hover:opacity-90">
+          Place Order & Pay Now
+        </button>
+      </div>
 
     </div>
   <?php } else { ?>
-    <div class="text-center mt-20 text-purple-900 text-lg font-semibold"> Your cart is empty!</div>
+    <div class="text-center mt-20 text-purple-900 text-lg font-semibold">Your cart is empty!</div>
   <?php } ?>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById("payButton").onclick = function (e) {
+      e.preventDefault();
+
+      var options = {
+        "key": "rzp_test_ADgITmVcjzYynP", // Replace this with your Razorpay API key
+        "amount": "<?php echo $total_price * 100; ?>", // Amount in paise
+        "currency": "INR",
+        "name": "My Shop",
+        "description": "Product Purchase",
+        "image": "https://your-logo-url.com/logo.png", // optional
+        "handler": function (response){
+            // You can store payment ID in session or DB from here using AJAX too
+            window.location.href = "place_order.php?payment_id=" + response.razorpay_payment_id;
+        },
+        "prefill": {
+            "name": "<?php echo $_SESSION['username'] ?? 'Customer'; ?>",
+            "email": "",
+            "contact": ""
+        },
+        "theme": {
+            "color": "#8A2BE2"
+        }
+      };
+
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    };
+  </script>
 
 </body>
 </html>

@@ -3,13 +3,24 @@ session_start();
 include('db.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $shop_name = $_POST['shop_name'];
-    $owner_name = $_POST['owner_name'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
-    $pincode = $_POST['pincode'];
+    $shop_name  = htmlspecialchars(trim($_POST['shop_name']));
+    $owner_name = htmlspecialchars(trim($_POST['owner_name']));
+    $email      = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $password   = $_POST['password'];
+    $phone      = htmlspecialchars(trim($_POST['phone']));
+    $address    = htmlspecialchars(trim($_POST['address']));
+    $pincode    = htmlspecialchars(trim($_POST['pincode']));
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Invalid email format.');window.location='seller_register.php';</script>";
+        exit;
+    }
+
+    if (strlen($password) < 8) {
+        echo "<script>alert('Password must be at least 8 characters long.');window.location='seller_register.php';</script>";
+        exit;
+    }
+
     $check = mysqli_query($conn, "SELECT * FROM sellers WHERE email='$email'");
     if (mysqli_num_rows($check) > 0) {
         echo "<script>alert('Email already registered. Try logging in.');window.location='seller_register.php';</script>";
@@ -47,6 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <title>Register as Seller - SnapKart</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+        function validateForm() {
+            const password = document.getElementById('password').value;
+            if (password.length < 8) {
+                alert("Password must be at least 8 characters long.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
 
@@ -58,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <div class="flex justify-center items-start pt-14 bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200 min-h-screen">
     <div class="flex flex-col h-auto w-[16cm] p-6 bg-gradient-to-r from-orange-300 via-pink-300 to-blue-300 rounded-2xl shadow-2xl border border-gray-300">
-        <form method="POST" class="space-y-3">
+        <form method="POST" onsubmit="return validateForm();" class="space-y-3">
 
             <div>
                 <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
@@ -88,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
                     Password:
                 </label>
-                <input type="password" name="password" required placeholder="Enter password"
+                <input type="password" name="password" id="password" required placeholder="At least 8 characters"
                     class="w-full border border-gray-400 rounded p-2 text-black placeholder-gray-500" />
             </div>
 
