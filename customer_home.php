@@ -1,7 +1,12 @@
 <?php
 session_start();
 include('db.php');
-$cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+$customer_email = $_SESSION['email']; 
+$cart_count = 0;
+
+$result = mysqli_query($conn, "SELECT SUM(quantity) AS total FROM cart WHERE customer_email = '$customer_email'");
+$row = mysqli_fetch_assoc($result);
+$cart_count = $row['total'] ?? 0;
 
 if (!isset($_SESSION['email']) || $_SESSION['usertype'] != 'customer') {
     header("Location: login.php");
@@ -41,38 +46,38 @@ $result = mysqli_query($conn, $sql);
         });
     </script>
 </head>
-<body class="bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200 min-h-screen flex flex-col">
+<body class="bg-gradient-to-r from-orange-200 via-pink-400 to-blue-300 min-h-screen flex flex-col">
 
-<div class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2 shadow-md rounded-b-xl relative gap-3">
+<div class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white flex flex-col sm:flex-row  px-4 py-2 shadow-md rounded-b-xl relative gap-3">
 
     <div class="flex items-center space-x-3">
-        <button id="hamburgerButton" onclick="toggleMenu()" class="bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+        <button id="hamburgerButton" onclick="toggleMenu()" class="bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm italic font-semibold shadow hover:opacity-90 transition">
             CATEGORY
         </button>
-        <h1 class="text-xl sm:text-lg font-bold">Welcome, <?php echo htmlspecialchars($customer_name); ?> </h1>
+        <h1 class="text-xl  italic font-bold">Welcome, <?php echo htmlspecialchars($customer_name); ?> </h1>
     </div>
 
-    <form method="GET" class="flex flex-grow justify-center sm:w-1/2">
+    <form method="GET" class="flex flex-grow justify-center">
         <input type="text" name="search" placeholder="Search for products..." value="<?php echo htmlspecialchars($search_query); ?>"
                class="w-full max-w-lg px-4 py-2 rounded-l-full border border-gray-300 text-black focus:outline-none">
         <button type="submit"
-                class="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 text-white px-5 py-2 rounded-r-full font-semibold hover:opacity-90 transition">
+                class="bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 text-white italic px-5 py-2 rounded-r-full font-semibold hover:opacity-90 transition">
             Search
         </button>
     </form>
 
     <div class="flex items-center gap-2 justify-end">
-        <a href="cart.php" class="bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+        <a href="cart.php" class="bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 text-white px-3 py-1 rounded-full text-sm font-semibold italic shadow hover:opacity-90 transition">
             Cart (<?php echo $cart_count; ?>)
         </a>
         <a href="logout.php" onclick="return confirm('Are you sure you want to logout?');"
-           class="bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+           class="bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white italic px-3 py-1 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
             Logout
         </a>
     </div>
 </div>
 
-<div id="categoryMenu" class="hidden absolute top-20 left-6 z-50 bg-white bg-opacity-90 rounded-lg shadow-xl w-48">
+<div id="categoryMenu" class="hidden absolute top-20 left-6  bg-white bg-opacity-90 rounded-lg shadow-xl w-48">
     <ul class="flex flex-col text-left text-black py-2">
         <li><a href="product_customer_electronics.php" class="block px-4 py-2 hover:text-purple-600 font-semibold">Electronics</a></li>
         <li><a href="product_customer_clothing.php" class="block px-4 py-2 hover:text-purple-600">Clothing</a></li>
@@ -83,7 +88,7 @@ $result = mysqli_query($conn, $sql);
     </ul>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4 mt-4">
+<div class="grid grid-cols-5 gap-4 px-4 mt-4">
     <?php
     if (mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {

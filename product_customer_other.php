@@ -1,7 +1,12 @@
 <?php
 session_start();
 include("db.php");
-$cart_count = isset($_SESSION['cart']) ? array_sum($_SESSION['cart']) : 0;
+$customer_email = $_SESSION['email']; // assuming user is logged in
+$cart_count = 0;
+
+$result = mysqli_query($conn, "SELECT SUM(quantity) AS total FROM cart WHERE customer_email = '$customer_email'");
+$row = mysqli_fetch_assoc($result);
+$cart_count = $row['total'] ?? 0;
 $search = isset($_GET['search']) ? $_GET['search'] : "";
 
 $query = "SELECT * FROM products WHERE category = 'Other'";
@@ -20,23 +25,23 @@ $result = mysqli_query($conn, $query);
   <title>Other Products</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200 p-4">
-  <div class="flex justify-between items-center mb-6 bg-white bg-opacity-40 backdrop-blur-md p-4 rounded-xl shadow">
+<body class="min-h-screen bg-gradient-to-r from-orange-200 via-pink-400 to-purple-300">
+  <div class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500  flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-3 mb-2 shadow-md rounded-b-xl relative gap-3">
     
-    <form method="get" class="flex items-center mx-auto">
+    <form method="get" class="flex w-auto items-center mx-auto">
       <input type="text" name="search" placeholder="Search product..." value="<?php echo htmlspecialchars($search); ?>" class="px-3 py-1 rounded-l-full border border-gray-300 text-sm focus:outline-none">
-      <button type="submit" class="px-4 py-1 bg-pink-500 text-white rounded-r-full hover:bg-pink-600 transition text-sm">Search</button>
+      <button type="submit" class="italic px-4 py-1 bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white rounded-r-full hover:bg-pink-600 transition text-sm">Search</button>
     </form>
 
     <div class="flex items-center gap-2">
-    <a href="cart.php" class="bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+    <a href="cart.php" class="italic bg-gradient-to-r from-yellow-400 via-red-400 to-pink-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
              Cart (<?php echo $cart_count; ?>)
         </a>
-      <a href="customer_home.php" class="bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+      <a href="customer_home.php" class="italic bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
         Dashboard
       </a>
       <a href="logout.php" onclick="return confirm('Are you sure you want to logout?');"
-         class="bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
+         class="italic bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
           Logout
       </a>
     </div>

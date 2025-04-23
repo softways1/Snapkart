@@ -41,10 +41,9 @@ $total_products = $total_row['total'];
     <title>My Products</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200 min-h-screen p-6">
-
-    <div class="flex items-center justify-between mb-6 px-4">
-        <h1 class="text-3xl font-bold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-500 text-transparent bg-clip-text">
+<body class="bg-gradient-to-r from-orange-200 via-pink-400 to-blue-300 min-h-screen">
+    <div class="bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white flex flex-col sm:flex-row sm:justify-between sm:items-center px-4 py-2 mb-2 shadow-md rounded-b-xl relative gap-3">
+        <h1 class="text-3xl italic font-bold text-white bg-clip-text">
             My Products
         </h1>
 
@@ -63,8 +62,8 @@ $total_products = $total_row['total'];
            class="ml-4 bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow hover:opacity-90 transition">
             Logout
         </a>
+   
     </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
         <?php while($row = mysqli_fetch_assoc($result)) { ?>
             <div class="bg-gradient-to-br from-pink-200 via-orange-100 to-purple-100 rounded-xl shadow-md p-4 flex flex-col items-center space-y-2 text-xs w-full">
