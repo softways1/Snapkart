@@ -57,11 +57,7 @@ while ($row = mysqli_fetch_assoc($result)) {
       <div class="text-right text-lg font-bold text-purple-900 mt-4">Total: ₹<?php echo $total_price; ?></div>
 
       <div class="text-center mt-4">
-<<<<<<< HEAD
         <button id="payButton" class="italic bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-full shadow hover:opacity-90">
-=======
-        <button id="payButton" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-2 rounded-full shadow hover:opacity-90">
->>>>>>> eb3d301cb425b0728c806e63998e58c861b7e857
           Place Order & Pay Now
         </button>
       </div>
@@ -89,11 +85,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         },
         "prefill": {
             "name": "<?php echo $_SESSION['username'] ?? 'Customer'; ?>",
-<<<<<<< HEAD
             "email": "<?php echo $customer_email; ?>",
-=======
-            "email": "",
->>>>>>> eb3d301cb425b0728c806e63998e58c861b7e857
             "contact": ""
         },
         "theme": {
