@@ -43,20 +43,12 @@ if (isset($_POST['login'])) {
 </head>
 <body class="bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200">
 
-<<<<<<< HEAD
-=======
-    <!-- Header -->
->>>>>>> eb3d301cb425b0728c806e63998e58c861b7e857
     <div class="flex justify-center items-center w-auto h-[1.2cm] bg-gradient-to-r from-orange-100 via-pink-300 to-purple-200">
         <h1 class="text-5xl font-bold bg-gradient-to-r from-orange-400 via-pink-500 to-blue-500 text-transparent bg-clip-text">
             Welcome To SnapKart
         </h1>
     </div>
 
-<<<<<<< HEAD
-=======
-    <!-- Login Form -->
->>>>>>> eb3d301cb425b0728c806e63998e58c861b7e857
     <div class="flex justify-center items-start pt-14 min-h-screen">
         <div class="flex flex-col h-auto w-[13cm] p-6 bg-gradient-to-r from-orange-300 via-pink-300 to-blue-300 rounded-2xl shadow-2xl border border-gray-300">
             
@@ -65,10 +57,6 @@ if (isset($_POST['login'])) {
             </h2>
 
             <form method="POST" action="login.php" class="space-y-3">
-<<<<<<< HEAD
-=======
-                <!-- Radio buttons -->
->>>>>>> eb3d301cb425b0728c806e63998e58c861b7e857
                 <div class="flex items-center gap-4">
                     <label class="font-semibold bg-gradient-to-r from-orange-500 via-pink-600 to-blue-600 text-transparent bg-clip-text">
                         I am a:
